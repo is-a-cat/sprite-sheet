@@ -1,21 +1,44 @@
 <!DOCTYPE html>
-<html>
+<meta charset="UTF-8">
+<html lang="en">
 <head>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>		
+<!-- I know, jquery is totally unnececary for a project like this. sue me. i'm lazy -->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>		
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap-theme.min.css">
+<script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>
 <script type="text/javascript">
+//Set Defaults
 var pram={
 w:100,
   h:220,
-  num:8,
-  padding:0
+  num:7,
+  padding:0,
+  framerate:80,
 };
+//Keep the coords
 var coords={
 x:0,
   y:0
 }
-var url='skel.png';
+var url='http://is-a-cat.github.io/sprite-sheet/skel.png';
 var anim=false;
-
+var help=0;
+var con;
+function info(){
+	if(help){
+		help=0;
+		$('.back').hide();
+		$('.front').show();
+	}else{
+		con=$('#float').html();
+		$('.back').show();
+		$('.front').hide();
+//		$('#float').html("<div class='info'>Created by is-a-cat for <a href='http://www.projectphoenixscp.com'>Project Phoenix.</a> Use it for whatever.</div><button class='btn btn-default help-but' onClick='info();'><p>?</p></button>");
+		help=1;
+	}
+}
+//html5 file handler
 function handleFileSelect(evt) {
 	var files = evt.target.files; 
 	for (var i = 0, f; f = files[i]; i++) {
@@ -55,7 +78,7 @@ function animate(){
 	if(!anim){
 		anim=setInterval(function() {
 				forward();
-				},80);
+				},pram.framerate);
 
 		$('#play').html('Stop');
 	}else{
@@ -67,15 +90,17 @@ function animate(){
 		$('#play').html('Play');
 	}
 }
+//edit values
 function getVal(){
 	pram.w=parseInt($('#wid').val());
+	pram.framerate=parseInt($('#framerate').val());
 	url=$('#url').val();
 	pram.h=parseInt($('#hig').val());
 	pram.padding=parseInt($('#pad').val());
 	pram.num=$('#num').val()-1;
 }
 function drawShape() {
-	$('#frame').html(coords.x);
+	$('#frame').html(coords.x+1);
 	myCanvas = document.getElementById("myCanvas");
 	ctx = myCanvas.getContext("2d");
 	sprite = new Image();
@@ -84,35 +109,117 @@ function drawShape() {
 	}
 	sprite.src = url;
 }
-window.onload = function(e){ 
+function loadDefaults(){
 	$('#url').val(url);
+	$('#framerate').val(pram.framerate);
 	$('#wid').val(pram.w);
 	$('#hig').val(pram.h);
 	$('#pad').val(pram.padding);
 	$('#num').val(pram.num+1);
+}
+
+$( ".help-but" ).click(function() {
+alert( "Handler for .click() called." );
+});
+window.onload = function(e){ 
+	$('.back').hide();
+	//load defaults to input boxes
+	loadDefaults();
 	document.getElementById('files').addEventListener('change', handleFileSelect, false);
 	drawShape();
+
 }
 </script>
+<style>
+body{
+	background-color:#D8D8D8;
+}
+.info{
+	width:100%;
+	text-align:center;
+	margin-top:40px;
+	height:300px;
+}
+.main{
+	border-radius: 15px;
+	box-shadow: 6px 6px 10px #B8B8B8;
+	position:relative;
+	background-color:white;
+	top:20px;
+	border:1px solid;
+	width:750px;
+}
+.down{
+	position:relative;
+	top:10px;
+}
+h1{
+	position:absolute;bottom:5px;left:25px;
+}
+.buts{
+	position:relative;left:140px;
+}
+#frame{
+	border-radius: 5px;
+	border:1px solid;
+	padding:7px 2px 7px 2px;
+}
+.help-but{
+	position:absolute;
+	right:-25px;
+	top:10px;
+	border-radius: 15px;
+	padding:5px;
+	color:grey;
+	width:20px;	
+	height:20px;
+	background-color:white;
+
+}
+.help-but p{
+	position:relative;
+	bottom:5px;
+//	left:1px;
+}
+</style>
 </head>
 <body>
-<h1>Sprite Sheet Tester v0.01</h1>
-<div style='display:inline-block'>
-	Sprite URL: <input type="text" id="url"><br>
-	Sprite width: <input type="text" id="wid"><br>
-	Sprite height: <input type="text" id="hig"><br>
-	Sprite padding: <input type="text" id="pad"><br>
-	Number of sprites: <input type="text" id="num"><br>
-	<button onClick='getVal();'>update</button>
-	<button onClick='animate();' id='play'>Play</button>
-	<button onClick='backward();' ><</button>
-	<span id='frame'>0</span>
-	<button onClick='forward();' >></button>
-	<input type="file" id="files" name="files[]"  /><br/>
+<div id='float' class='container main flip-container' >
+	<div class='front'>
+	<div style='display:inline-block'>
+		<span class='down'>
+			Sprite URL: <input class="form-control" type="text" id="url"><br>
+			</down>
+			<div style='float:left;width:100px;'>
+				Sprite width: <input class="form-control" type="text" id="wid"><br>
+				Sprite height: <input class="form-control" type="text" id="hig"><br>
+				Sprite padding: <input class="form-control" type="text" id="pad"><br>
+			</div>
+			<div style='float:right;padding-left:10px;'>
+
+				Number of sprites: <input class="form-control" type="text" id="num"><br>
+				Framerate: <input class="form-control" type="text" id="framerate"><br>
+
+				<input style='padding-top:22px;' type="file" id="files" name="files[]"  /><br/>
+			</div>
+		</div>
+		<canvas id="myCanvas" width="300" height="350" style='float:left;'>
+			Sorry, your browser doesn't support canvas technology.
+		</canvas>
+
+		<div class='buts' >
+			<button class='btn btn-primary' onClick='getVal();'>update</button>
+			<button class='btn btn-default' onClick='animate();' id='play'>Play</button>
+			<button class='btn btn-warning' onClick='backward();' ><</button>
+			<span id='frame'>0</span>
+			<button class='btn btn-warning' onClick='forward();' >></button>
+		</div>
+		<h1>Sprite Sheet Tester v0.02</h1>
+	</div>
+	<div class='back'>
+<div class='info'>Created by is-a-cat for <a href='http://www.projectphoenixscp.com'>Project Phoenix.</a> Use it for whatever.</div>
 </div>
-<canvas id="myCanvas" width="300" height="350" style='float:left;'>
-	<!-- Insert fallback content here -->
-	Sorry, your browser doesn't support canvas technology.
-</canvas>
-</body>
-</html>
+<button class='btn btn-default help-but' onClick='info();'><p>?</p></button>
+</div>
+	</body>
+	</html>
