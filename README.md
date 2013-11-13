@@ -1,9 +1,9 @@
 sprite-sheet
 ============
 
-HTML5 Spritesheet tester.
+<h1>HTML5 Spritesheet tester.</h1>
 
-Test it <a href='http://is-a-cat.github.io/sprite-sheet/'>here</a>.
+Made for <a href='http://www.projectphoenixscp.com'>Project Phoenix</a>. Test it <a href='http://is-a-cat.github.io/sprite-sheet/'>here</a>.
 
-TO DO:
+<b>TO DO:</b><br>
 Add multi-line spritesheet support and playing parts of a sheet.
