@@ -4,16 +4,16 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>		
 <script type="text/javascript">
 var pram={
-w:100,
-  h:220,
-  num:8,
+w:85,
+  h:200,
+  num:4,
   padding:0
 };
 var coords={
 x:0,
   y:0
 }
-var url='skel.png';
+var url='img/sci.png';
 var anim=false;
 
 function handleFileSelect(evt) {
