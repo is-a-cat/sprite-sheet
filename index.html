@@ -1,1 +1,118 @@
-"test"
+<!DOCTYPE html>
+<html>
+<head>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>		
+<script type="text/javascript">
+var pram={
+w:85,
+  h:200,
+  num:4,
+  padding:0
+};
+var coords={
+x:0,
+  y:0
+}
+var url='img/sci.png';
+var anim=false;
+
+function handleFileSelect(evt) {
+	var files = evt.target.files; 
+	for (var i = 0, f; f = files[i]; i++) {
+		if (!f.type.match('image.*')) {
+			continue;
+		}
+		var reader = new FileReader();
+		reader.onload = (function(theFile) {
+				return function(e) {
+				url=e.target.result;
+				$('#url').val(url);
+				ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
+				coords.x=0;
+				drawShape();
+				};
+				})(f);
+		reader.readAsDataURL(f);
+	}
+}
+function backward(){
+	ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
+	if(coords.x==0)
+		coords.x=pram.num;
+	else
+		coords.x--;
+	drawShape();
+}
+function forward(){
+	ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
+	if(coords.x==pram.num)
+		coords.x=0;
+	else
+		coords.x++;
+	drawShape();
+}
+function animate(){
+	if(!anim){
+		anim=setInterval(function() {
+				forward();
+				},80);
+
+		$('#play').html('Stop');
+	}else{
+		clearInterval(anim);
+		ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
+		coords.x=0;
+		drawShape();
+		anim=false;
+		$('#play').html('Play');
+	}
+}
+function getVal(){
+	pram.w=parseInt($('#wid').val());
+	url=$('#url').val();
+	pram.h=parseInt($('#hig').val());
+	pram.padding=parseInt($('#pad').val());
+	pram.num=$('#num').val()-1;
+}
+function drawShape() {
+	$('#frame').html(coords.x);
+	myCanvas = document.getElementById("myCanvas");
+	ctx = myCanvas.getContext("2d");
+	sprite = new Image();
+	sprite.onload = function() {
+		ctx.drawImage(sprite, 0+pram.padding+(pram.w+pram.padding)*coords.x, 0,pram.w,pram.h,0,0,pram.w,pram.h);
+	}
+	sprite.src = url;
+}
+window.onload = function(e){ 
+	$('#url').val(url);
+	$('#wid').val(pram.w);
+	$('#hig').val(pram.h);
+	$('#pad').val(pram.padding);
+	$('#num').val(pram.num+1);
+	document.getElementById('files').addEventListener('change', handleFileSelect, false);
+	drawShape();
+}
+</script>
+</head>
+<body>
+<h1>Sprite Sheet Tester v0.01</h1>
+<div style='display:inline-block'>
+	Sprite URL: <input type="text" id="url"><br>
+	Sprite width: <input type="text" id="wid"><br>
+	Sprite height: <input type="text" id="hig"><br>
+	Sprite padding: <input type="text" id="pad"><br>
+	Number of sprites: <input type="text" id="num"><br>
+	<button onClick='getVal();'>update</button>
+	<button onClick='animate();' id='play'>Play</button>
+	<button onClick='backward();' ><</button>
+	<span id='frame'>0</span>
+	<button onClick='forward();' >></button>
+	<input type="file" id="files" name="files[]"  /><br/>
+</div>
+<canvas id="myCanvas" width="300" height="350" style='float:left;'>
+	<!-- Insert fallback content here -->
+	Sorry, your browser doesn't support canvas technology.
+</canvas>
+</body>
+</html>
